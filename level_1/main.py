@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-
-import file_ops
 import pandas as pd
 
 def main():
