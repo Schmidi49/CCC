@@ -38,3 +38,11 @@ def get_alt_waypoints(ast_x, ast_y, ss_x, ss_y, mode = 0):
         return [[ast_x - 3, ast_y - 3]]
     if mode == 9:
         return [[ast_x - 3, ast_y]]
+    if mode == 10:
+        return [[ast_x + 3, ast_y + 3], [ast_x + 3, ast_y - 3]]
+    if mode == 11:
+        return [[ast_x + 3, ast_y - 3], [ast_x - 3, ast_y - 3]]
+    if mode == 12:
+        return [[ast_x - 3, ast_y - 3], [ast_x - 3, ast_y + 3]]
+    if mode == 13:
+        return [[ast_x - 3, ast_y + 3], [ast_x + 3, ast_y + 3]]

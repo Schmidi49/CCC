@@ -80,12 +80,95 @@ def pad_speed_to_equal_length(speed_x, speed_y):
     for _ in range(time - time_y):
         speed_y.append(0)
 
+def count_leading_zeros(x):
+    num = 0
+    for i in x:
+        if i == 0:
+            num += 1
+        else:
+            return num
+    return num
+
+def count_trailing_zeros(x):
+    num = 0
+    c = x.copy()
+    c.reverse()
+    for i in c:
+        if i == 0:
+            num += 1
+        else:
+            return num
+    return num
+
+def concat_optimally(x, y, x_add, y_add):
+    cut_xy = min(count_trailing_zeros(x), count_leading_zeros(y_add),6)
+    x = x[:-cut_xy]
+    y_add = y_add[cut_xy:]
+    cut_yx = min(count_trailing_zeros(y), count_leading_zeros(x_add), 6)
+    y = y[:-cut_yx]
+    x_add = x_add[cut_yx:]
+    x = x + x_add
+    y = y + y_add
+    return x,y
+
+
+def get_route_with_waypoints(ast_x, ast_y, dist_x, dist_y, waypoints):
+    pos_x = 0
+    pos_y = 0
+    x,y = [], []
+    for i, point in enumerate(waypoints):
+        wp_x, wp_y = point
+        dist_x = wp_x - pos_x
+        dist_y = wp_y - pos_y
+        x_wp = get_speed(dist_x)
+        y_wp = get_speed(dist_y)
+        pad_speed_to_equal_length(x_wp, y_wp)
+
+        pos_x = wp_x
+        pos_y = wp_y
+        if i != 0:
+            x,y = concat_optimally(x,y, x_wp, y_wp)
+        else:
+            x = x_wp
+            y = y_wp
+    return x, y
+def delete_adjacent(x, y, ast_x, ast_y):
+
+
+    for i in range(x):
+        if i != 0:
+            if x[i] == i[i - 1]:
+                c = x.copy()
+                c[i] = c[i - 1]
+                c[i + 1] = c[i - 1]
+                if not is_colliding(get_step_instructions(x, y), ast_x, ast_y):
+                    x = c
+                    return True
+            if True:
+                x[i] = 0
+
+
+
+def get_fastest_route_with_waypoints(ast_x, ast_y, dist_x, dist_y):
+    options = []
+    for i in range(14):
+        waypoints = get_alt_waypoints(ast_x, ast_y, dist_x, dist_y, i) + [[dist_x, dist_y]]
+        x_i, y_i = get_route_with_waypoints(ast_x, ast_y, dist_x, dist_y, waypoints)
+        if not is_colliding(get_step_instructions(x_i, y_i), ast_x, ast_y):
+            options.append([x_i, y_i])
+    times = []
+    for option in options:
+        times.append(max(get_time(option[0]), get_time(option[1])))
+
+    min_time_intex = times.index(min(times))
+    return options[min_time_intex]
+
 def main():
     input = []
 
     out_x = []
     out_y = []
-    with open("level6_0_example.in", "r") as f:
+    with open("level6_1_small.in", "r") as f:
         first_line = f.readline().strip()
         for line in f:
             input.append(line.strip())
@@ -107,30 +190,14 @@ def main():
         step_instructions = get_step_instructions(x, y)
 
         if is_colliding(step_instructions, ast_x, ast_y):
-            waypoints = get_alt_waypoints(ast_x, ast_y, dist_x, dist_y) + [[dist_x, dist_y]]
-            x = []
-            y = []
-            pos_x = 0
-            pos_y = 0
-            for point in waypoints:
-                wp_x, wp_y = point
-                dist_x = wp_x - pos_x
-                dist_y = wp_y - pos_y
-                x_wp = get_speed(dist_x)
-                y_wp = get_speed(dist_y)
-                pad_speed_to_equal_length(x_wp, y_wp)
-                pos_x = wp_x
-                pos_y = wp_y
-
-                x += x_wp
-                y += y_wp
+            x, y = get_fastest_route_with_waypoints(ast_x, ast_y, dist_x, dist_y)
             step_instructions = get_step_instructions(x, y)
             if is_colliding(step_instructions, ast_x, ast_y, verbose=True):
                 print("Error: Still colliding after waypoints! in Input ", example_nr)
 
         if get_time(x) > time or get_time(y) > time:
-
             print(f"Warning: Generated time exceeds limit by {(max(get_time(x), get_time(y)) - time)}! in Input ", example_nr)
+            print(get_step_instructions(x, y))
         out_x.append(x)
         out_y.append(y)
 
@@ -138,7 +205,7 @@ def main():
 
 if __name__ == '__main__':
     out_x, out_y = main()
-    with open("output_0.out", "w") as f:
+    with open("output_1.out", "w") as f:
         for i in range(len(out_x)):
             x_str = ' '.join(map(str, out_x[i]))
             y_str = ' '.join(map(str, out_y[i]))
