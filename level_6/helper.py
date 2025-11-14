@@ -23,18 +23,18 @@ def get_alt_waypoints(ast_x, ast_y, ss_x, ss_y, mode = 0):
         return [new_waypoints[1], new_waypoints[0]]
 
     if mode == 2:
-        return [ast_x, ast_y + 3]
+        return [[ast_x, ast_y + 3]]
     if mode == 3:
-        return [ast_x, ast_y - 3]
+        return [[ast_x, ast_y - 3]]
     if mode == 4:
-        return [ast_x + 3, ast_y + 3]
+        return [[ast_x + 3, ast_y + 3]]
     if mode == 5:
-        return [ast_x + 3, ast_y - 3]
+        return [[ast_x + 3, ast_y - 3]]
     if mode == 6:
-        return [ast_x + 3, ast_y]
+        return [[ast_x + 3, ast_y]]
     if mode == 7:
-        return [ast_x - 3, ast_y + 3]
+        return [[ast_x - 3, ast_y + 3]]
     if mode == 8:
-        return [ast_x - 3, ast_y - 3]
+        return [[ast_x - 3, ast_y - 3]]
     if mode == 9:
-        return [ast_x - 3, ast_y]
+        return [[ast_x - 3, ast_y]]
