@@ -1,6 +1,6 @@
-def get_alt_waypoints(ast_x, ast_y, ss_x, ss_y, complemetary = True):
+def get_alt_waypoints(ast_x, ast_y, ss_x, ss_y, normal = True):
     new_waypoints = [[ast_x, ast_y], [ast_x, ast_y]]
-    inc = 3 if complemetary else -3
+    inc = 3 if normal else -3
 
     if (abs(ast_y) < abs(ast_x)):
         new_waypoints[0][0] += inc if (0 > ast_x) else -inc
@@ -16,4 +16,4 @@ def get_alt_waypoints(ast_x, ast_y, ss_x, ss_y, complemetary = True):
         new_waypoints[1][0] += inc if (0 > ast_x) else -inc
         new_waypoints[1][1] += inc if (ss_y > 0) else -inc
 
-    return new_waypoints if complemetary else [new_waypoints[1], new_waypoints[0]]
+    return new_waypoints if normal else [new_waypoints[1], new_waypoints[0]]
