@@ -21,4 +21,4 @@ def get_alt_waypoints(ast_x, ast_y, ss_x, ss_y, mode = 0):
     if mode == 1:
         return [new_waypoints[1], new_waypoints[0]]
     else:
-        return [[new_waypoints[1][0] + new_waypoints[0][0] / 2, new_waypoints[1][1] + new_waypoints[0][1] / 2]]
+        return [[new_waypoints[1][0] + new_waypoints[0][0] // 2, new_waypoints[1][1] + new_waypoints[0][1] // 2]]
